@@ -3,11 +3,6 @@
 module.exports = function (grunt) {
   var gruntConfig;
   gruntConfig = {
-    env: {
-      test: {
-        NODE_ENV: 'test'
-      }
-    },
     clean: {
       default: ['dist']
     },
@@ -85,8 +80,8 @@ module.exports = function (grunt) {
   require('time-grunt')(grunt);
   grunt.initConfig(gruntConfig);
   grunt.registerTask('verify', ['mkdir', 'jshint']);
-  grunt.registerTask('test', ['env:test', 'mkdir', 'mochacov:test', 'cleanXunitFile']);
-  grunt.registerTask('coverage', ['env:test', 'mkdir', 'mochacov:test', 'mochacov:coverage', 'cleanXunitFile']);
-  grunt.registerTask('coveralls', ['env:test', 'mkdir', 'mochacov:test', 'mochacov:coveralls', 'cleanXunitFile']);
+  grunt.registerTask('test', ['mkdir', 'mochacov:test', 'cleanXunitFile']);
+  grunt.registerTask('coverage', ['mkdir', 'mochacov:test', 'mochacov:coverage', 'cleanXunitFile']);
+  grunt.registerTask('coveralls', ['mkdir', 'mochacov:test', 'mochacov:coveralls', 'cleanXunitFile']);
   grunt.registerTask('default', ['verify', 'coverage']);
 };
