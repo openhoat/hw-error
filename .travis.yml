@@ -3,7 +3,8 @@ language: node_js
 node_js:
   - 0.12
 
-services: redis
+services:
+  - redis-server
 
 before_script:
   - "npm i -g mocha grunt-cli"
