@@ -3,9 +3,7 @@
 var chai = require('chai')
   , expect = chai.expect
   , util = require('util')
-  , hwError = require('../lib/hw-error')
-  , logger = require('hw-logger')
-  , log = logger.log;
+  , hwError = require('../lib/hw-error');
 
 describe('hw-error', function () {
 
