@@ -1,16 +1,11 @@
 language: node_js
 
-node_js:
-  - 0.12
+node_js: 0.12
 
-services:
-  - redis-server
+services: redis-server
 
-before_script:
-  - "npm i -g mocha grunt-cli"
+before_script: "npm i -g mocha grunt-cli"
 
-script:
-  - "grunt test"
+script: "grunt test"
 
-after_script:
-  - "grunt coveralls"
+after_script: "grunt coveralls"
