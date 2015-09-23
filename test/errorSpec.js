@@ -124,37 +124,37 @@ describe('hw-error', function () {
       it('should send a simple bad format error', function () {
         hwError.send(res, 'BAD_FORMAT');
         expect(res).to.have.property('statusCode', 400);
-        expect(res).to.have.property('body').that.eql({message: 'bad request format'});
+        expect(res).to.have.property('body').that.eql({code: 'BAD_FORMAT', message: 'bad request format'});
       });
 
       it('should send a simple authorization error', function () {
         hwError.send(res, 'AUTHORIZATION');
         expect(res).to.have.property('statusCode', 401);
-        expect(res).to.have.property('body').that.eql({message: 'authorization required'});
+        expect(res).to.have.property('body').that.eql({code: 'AUTHORIZATION', message: 'authorization required'});
       });
 
       it('should send a simple forbidden error', function () {
         hwError.send(res, 'FORBIDDEN');
         expect(res).to.have.property('statusCode', 403);
-        expect(res).to.have.property('body').that.eql({message: 'access forbidden'});
+        expect(res).to.have.property('body').that.eql({code: 'FORBIDDEN', message: 'access forbidden'});
       });
 
       it('should send a simple not found error', function () {
         hwError.send(res, 'NOT_FOUND');
         expect(res).to.have.property('statusCode', 404);
-        expect(res).to.have.property('body').that.eql({message: 'resource not found'});
+        expect(res).to.have.property('body').that.eql({code: 'NOT_FOUND', message: 'resource not found'});
       });
 
       it('should send a simple conflict error', function () {
         hwError.send(res, 'CONFLICT');
         expect(res).to.have.property('statusCode', 409);
-        expect(res).to.have.property('body').that.eql({message: 'resource conflict'});
+        expect(res).to.have.property('body').that.eql({code: 'CONFLICT', message: 'resource conflict'});
       });
 
       it('should send a simple internal error', function () {
         hwError.send(res, 'INTERNAL');
         expect(res).to.have.property('statusCode', 500);
-        expect(res).to.have.property('body').that.eql({message: 'internal error'});
+        expect(res).to.have.property('body').that.eql({code: 'INTERNAL', message: 'internal error'});
       });
 
     });
@@ -208,7 +208,7 @@ describe('hw-error', function () {
     it('should send an error with schema errors', function () {
       hwError.send(res, {name: 'INTERNAL', schemaErrors: [{a: 4}, {b: 5}]});
       expect(res).to.have.property('statusCode', 500);
-      expect(res).to.have.property('body').that.eql([{a: 4}, {b: 5}]);
+      expect(res).to.have.property('body').that.eql([{code: 'BAD_FORMAT', a: 4}, {code: 'BAD_FORMAT', b: 5}]);
     });
 
     it('should send a simple error with logs', function () {
@@ -217,7 +217,7 @@ describe('hw-error', function () {
       hwError.send(res);
       logger.setLevel(level);
       expect(res).to.have.property('statusCode', 500);
-      expect(res).to.have.property('body').that.eql({message: 'internal error'});
+      expect(res).to.have.property('body').that.eql({code: 'INTERNAL', message: 'internal error'});
     });
 
   });
