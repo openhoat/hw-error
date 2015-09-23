@@ -164,37 +164,37 @@ describe('hw-error', function () {
       it('should send a bad format error with message', function () {
         hwError.send(res, {name: 'BAD_FORMAT', message: 'field required'});
         expect(res).to.have.property('statusCode', 400);
-        expect(res).to.have.property('body').that.eql({message: 'field required'});
+        expect(res).to.have.property('body').that.eql({code: 'BAD_FORMAT', message: 'field required'});
       });
 
       it('should send a authorization error with message', function () {
         hwError.send(res, {name: 'AUTHORIZATION', message: 'authorization needed'});
         expect(res).to.have.property('statusCode', 401);
-        expect(res).to.have.property('body').that.eql({message: 'authorization needed'});
+        expect(res).to.have.property('body').that.eql({code: 'AUTHORIZATION', message: 'authorization needed'});
       });
 
       it('should send a forbidden error with message', function () {
         hwError.send(res, {name: 'FORBIDDEN', message: 'you are not allowed'});
         expect(res).to.have.property('statusCode', 403);
-        expect(res).to.have.property('body').that.eql({message: 'you are not allowed'});
+        expect(res).to.have.property('body').that.eql({code: 'FORBIDDEN', message: 'you are not allowed'});
       });
 
       it('should send a not found error with message', function () {
         hwError.send(res, {name: 'NOT_FOUND', message: 'page not found'});
         expect(res).to.have.property('statusCode', 404);
-        expect(res).to.have.property('body').that.eql({message: 'page not found'});
+        expect(res).to.have.property('body').that.eql({code: 'NOT_FOUND', message: 'page not found'});
       });
 
       it('should send a simple conflict error', function () {
         hwError.send(res, {name: 'CONFLICT', message: 'resource already exists'});
         expect(res).to.have.property('statusCode', 409);
-        expect(res).to.have.property('body').that.eql({message: 'resource already exists'});
+        expect(res).to.have.property('body').that.eql({code: 'CONFLICT', message: 'resource already exists'});
       });
 
       it('should send a simple internal error', function () {
         hwError.send(res, {name: 'INTERNAL', message: 'oops'});
         expect(res).to.have.property('statusCode', 500);
-        expect(res).to.have.property('body').that.eql({message: 'oops'});
+        expect(res).to.have.property('body').that.eql({code: 'INTERNAL', message: 'oops'});
       });
 
     });
