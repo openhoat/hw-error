@@ -11,36 +11,59 @@ describe('hw-error', function () {
   describe('build', function () {
 
     it('should build a simple error', function () {
-      var error;
-      error = hwError.build('INTERNAL');
+      var InternalError, error, fn;
+      InternalError = hwError.build('INTERNAL');
+      error = new InternalError();
+      expect(error).to.be.an.instanceof(InternalError);
       expect(error).to.be.an.instanceof(Error);
-      expect(error).to.have.property('name', 'INTERNAL');
+      expect(error).to.have.property('name', 'InternalError');
       expect(error).to.have.property('message', '');
-      expect(error.toString()).to.equal('INTERNAL');
-      expect(error.stack).to.match(/^INTERNAL\n[ ]+at Context.<anonymous> (.*\/errorSpec.js:.*)\n.*/);
+      expect(error.toString()).to.equal('InternalError');
+      expect(error.stack).to.match(/^InternalError\n[ ]+at Context.<anonymous> (.*\/errorSpec.js:.*)\n.*/);
+      fn = function () {
+        throw error;
+      };
+      expect(fn).to.throw(InternalError);
+      expect(fn).to.throw(Error);
+      expect(fn).to.throw(error.name);
     });
 
     it('should build an error with message', function () {
-      var error;
-      error = hwError.build('INTERNAL', 'test error');
+      var InternalError, error, fn;
+      InternalError = hwError.build('INTERNAL');
+      error = new InternalError('test error');
+      expect(error).to.be.an.instanceof(InternalError);
       expect(error).to.be.an.instanceof(Error);
-      expect(error).to.have.property('name', 'INTERNAL');
+      expect(error).to.have.property('name', 'InternalError');
       expect(error).to.have.property('message', 'test error');
-      expect(error.toString()).to.equal('INTERNAL: test error');
-      expect(error.stack).to.match(/^INTERNAL: test error\n[ ]+at Context.<anonymous> (.*\/errorSpec.js:.*)\n.*/);
+      expect(error.toString()).to.equal('InternalError: test error');
+      expect(error.stack).to.match(/^InternalError: test error\n[ ]+at Context.<anonymous> (.*\/errorSpec.js:.*)\n.*/);
+      fn = function () {
+        throw error;
+      };
+      expect(fn).to.throw(InternalError);
+      expect(fn).to.throw(Error);
+      expect(fn).to.throw(error.name);
     });
 
     it('should build an error with object', function () {
-      var o, error;
+      var InternalError, o, error, fn;
+      InternalError = hwError.build('INTERNAL');
       o = {a: 4};
       o.toString = util.format.bind(null, '[a : %s]', o.a);
-      error = hwError.build('INTERNAL', o);
+      error = new InternalError(o);
+      expect(error).to.be.an.instanceof(InternalError);
       expect(error).to.be.an.instanceof(Error);
-      expect(error).to.have.property('name', 'INTERNAL');
+      expect(error).to.have.property('name', 'InternalError');
       expect(error).to.have.property('message', '{"a":4}');
       expect(error.toString()).to.equal('[a : 4]');
-      expect(error).to.have.property('a', 4);
-      expect(error.stack).to.match(/^INTERNAL: {"a":4}\n[ ]+at Context.<anonymous> (.*\/errorSpec.js:.*)\n.*/);
+      expect(error.stack).to.match(/^InternalError: {"a":4}\n[ ]+at Context.<anonymous> (.*\/errorSpec.js:.*)\n.*/);
+      fn = function () {
+        throw error;
+      };
+      expect(fn).to.throw(InternalError);
+      expect(fn).to.throw(Error);
+      expect(fn).to.throw('[a : 4]');
     });
 
   });
@@ -52,10 +75,10 @@ describe('hw-error', function () {
         hwError.throw('INTERNAL');
       } catch (error) {
         expect(error).to.be.an.instanceof(Error);
-        expect(error).to.have.property('name', 'INTERNAL');
+        expect(error).to.have.property('name', 'InternalError');
         expect(error).to.have.property('message', '');
-        expect(error.toString()).to.equal('INTERNAL');
-        expect(error.stack).to.match(/^INTERNAL\n[ ]+at Context.<anonymous> (.*\/errorSpec.js:.*)\n.*/);
+        expect(error.toString()).to.equal('InternalError');
+        expect(error.stack).to.match(/^InternalError\n[ ]+at Context.<anonymous> (.*\/errorSpec.js:.*)\n.*/);
       }
     });
 
@@ -64,10 +87,10 @@ describe('hw-error', function () {
         hwError.throw('INTERNAL', 'test error');
       } catch (error) {
         expect(error).to.be.an.instanceof(Error);
-        expect(error).to.have.property('name', 'INTERNAL');
+        expect(error).to.have.property('name', 'InternalError');
         expect(error).to.have.property('message', 'test error');
-        expect(error.toString()).to.equal('INTERNAL: test error');
-        expect(error.stack).to.match(/INTERNAL: test error\n[ ]+at Context.<anonymous> (.*\/errorSpec.js:.*)\n.*/);
+        expect(error.toString()).to.equal('InternalError: test error');
+        expect(error.stack).to.match(/InternalError: test error\n[ ]+at Context.<anonymous> (.*\/errorSpec.js:.*)\n.*/);
       }
     });
 
@@ -79,11 +102,11 @@ describe('hw-error', function () {
         hwError.throw('INTERNAL', o);
       } catch (error) {
         expect(error).to.be.an.instanceof(Error);
-        expect(error).to.have.property('name', 'INTERNAL');
+        expect(error).to.have.property('name', 'InternalError');
         expect(error).to.have.property('message', '{"a":4}');
         expect(error.toString()).to.equal('[a : 4]');
         expect(error).to.have.property('a', 4);
-        expect(error.stack).to.match(/INTERNAL: {"a":4}\n[ ]+at Context.<anonymous> (.*\/errorSpec.js:.*)\n.*/);
+        expect(error.stack).to.match(/InternalError: {"a":4}\n[ ]+at Context.<anonymous> (.*\/errorSpec.js:.*)\n.*/);
       }
     });
 
@@ -92,10 +115,10 @@ describe('hw-error', function () {
         hwError.throwNotFound();
       } catch (error) {
         expect(error).to.be.an.instanceof(Error);
-        expect(error).to.have.property('name', 'NOT_FOUND');
+        expect(error).to.have.property('name', 'NotFoundError');
         expect(error).to.have.property('message', '');
-        expect(error.toString()).to.equal('NOT_FOUND');
-        expect(error.stack).to.match(/NOT_FOUND\n[ ]+at Context.<anonymous> (.*\/errorSpec.js:.*)\n.*/);
+        expect(error.toString()).to.equal('NotFoundError');
+        expect(error.stack).to.match(/NotFoundError\n[ ]+at Context.<anonymous> (.*\/errorSpec.js:.*)\n.*/);
       }
     });
 
