@@ -6,4 +6,4 @@
 
 Tools for friendly management of errors.
 
-Watch [test](test) for usage and examples.
+Watch [specs](spec) for usage and examples.
