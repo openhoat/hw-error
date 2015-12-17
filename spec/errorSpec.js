@@ -9,6 +9,10 @@ var chai = require('chai')
 
 describe('hw-error', function () {
 
+  beforeEach(function () {
+    hwError.init();
+  });
+
   describe('build', function () {
 
     it('should provide root error', function () {
@@ -19,7 +23,7 @@ describe('hw-error', function () {
       expect(error).to.have.property('name', 'RootError');
       expect(error).to.have.property('code', 'ROOT_ERROR');
       expect(error).to.have.property('message', '');
-      expect(error.toString()).to.equal('RootError: ');
+      expect(error.toString()).to.equal('RootError');
       expect(error.stack).to.match(/^RootError\n[ ]+at Context.<anonymous> (.*\/errorSpec.js:.*)\n.*/);
       fn = function () {
         throw error;
@@ -32,14 +36,24 @@ describe('hw-error', function () {
 
     it('should build a simple error', function () {
       var CustomError, error, fn;
-      CustomError = hwError.build('custom', {declare: false});
+      CustomError = hwError.build({
+        constructor: function CustomError() {
+          this.custom = true;
+        },
+        customizeClass: function () {
+          this.customClass = true;
+        },
+        declare: false
+      });
+      expect(CustomError).to.have.property('customClass', true);
       error = new CustomError();
       expect(error).to.be.an.instanceof(CustomError);
       expect(error).to.be.an.instanceof(Error);
       expect(error).to.have.property('name', 'CustomError');
       expect(error).to.have.property('code', 'CUSTOM_ERROR');
       expect(error).to.have.property('message', '');
-      expect(error.toString()).to.equal('CustomError: ');
+      expect(error).to.have.property('custom', true);
+      expect(error.toString()).to.equal('CustomError');
       expect(error.stack).to.match(/^CustomError\n[ ]+at Context.<anonymous> (.*\/errorSpec.js:.*)\n.*/);
       fn = function () {
         throw error;
@@ -47,7 +61,8 @@ describe('hw-error', function () {
       expect(fn).to.throw(CustomError);
       expect(fn).to.throw(Error);
       expect(fn).to.throw(error.name);
-      expect(hwError).to.not.respondTo('throwCustom');
+      expect(hwError).to.respondTo('throwCustom');
+      expect(hwError.throwCustom).to.throw(CustomError);
     });
 
     it('should build a simple error declared', function () {
@@ -60,7 +75,7 @@ describe('hw-error', function () {
       expect(error).to.have.property('name', 'CustomError');
       expect(error).to.have.property('code', 'CUSTOM_ERROR');
       expect(error).to.have.property('message', '');
-      expect(error.toString()).to.equal('CustomError: ');
+      expect(error.toString()).to.equal('CustomError');
       expect(error.stack).to.match(/^CustomError\n[ ]+at Context.<anonymous> (.*\/errorSpec.js:.*)\n.*/);
       fn = function () {
         throw error;
