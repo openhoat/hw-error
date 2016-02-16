@@ -4,8 +4,8 @@ var chai = require('chai')
   , expect = chai.expect
   , util = require('util')
   , hwError = require('../lib/hw-error');
-  //, logger = require('hw-logger')
-  //, log = logger.log;
+//, logger = require('hw-logger')
+//, log = logger.log;
 
 describe('hw-error', function () {
 
@@ -136,29 +136,26 @@ describe('hw-error', function () {
 
     it('should throw a simple error', function () {
       try {
-        hwError.throw('HTTP_INTERNAL');
+        hwError.throw('ROOT');
       } catch (error) {
         expect(error).to.be.an.instanceof(Error);
-        expect(error).to.have.property('name', 'HttpInternalError');
-        expect(error).to.have.property('code', 'HTTP_INTERNAL_ERROR');
-        expect(error).to.have.property('statusCode', 500);
-        expect(error).to.have.property('message', 'Internal Server Error');
-        expect(error.toString()).to.equal('HttpInternalError: Internal Server Error');
-        expect(error.stack).to.match(/^HttpInternalError: Internal Server Error\n[ ]+at Context.<anonymous> (.*\/errorSpec.js:.*)\n.*/);
+        expect(error).to.have.property('name', 'RootError');
+        expect(error).to.have.property('code', 'ROOT_ERROR');
+        expect(error.toString()).to.equal('RootError');
+        expect(error.stack).to.match(/^RootError\n[ ]+at Context.<anonymous> (.*\/errorSpec.js:.*)\n.*/);
       }
     });
 
     it('should throw an error with message', function () {
       try {
-        hwError.throw('HTTP_INTERNAL', 'test error');
+        hwError.throw('ROOT', 'test error');
       } catch (error) {
         expect(error).to.be.an.instanceof(Error);
-        expect(error).to.have.property('name', 'HttpInternalError');
-        expect(error).to.have.property('code', 'HTTP_INTERNAL_ERROR');
-        expect(error).to.have.property('statusCode', 500);
+        expect(error).to.have.property('name', 'RootError');
+        expect(error).to.have.property('code', 'ROOT_ERROR');
         expect(error).to.have.property('message', 'test error');
-        expect(error.toString()).to.equal('HttpInternalError: test error');
-        expect(error.stack).to.match(/HttpInternalError: test error\n[ ]+at Context.<anonymous> (.*\/errorSpec.js:.*)\n.*/);
+        expect(error.toString()).to.equal('RootError: test error');
+        expect(error.stack).to.match(/RootError: test error\n[ ]+at Context.<anonymous> (.*\/errorSpec.js:.*)\n.*/);
       }
     });
 
@@ -167,76 +164,24 @@ describe('hw-error', function () {
       o = {a: 4};
       o.toString = util.format.bind(null, '[a : %s]', o.a);
       try {
-        hwError.throw('HTTP_INTERNAL', o);
+        hwError.throw('ROOT', o);
       } catch (error) {
         expect(error).to.be.an.instanceof(Error);
-        expect(error).to.have.property('name', 'HttpInternalError');
-        expect(error).to.have.property('code', 'HTTP_INTERNAL_ERROR');
+        expect(error).to.have.property('name', 'RootError');
+        expect(error).to.have.property('code', 'ROOT_ERROR');
         expect(error).to.have.property('message', '{"a":4}');
         expect(error.toString()).to.equal('[a : 4]');
         expect(error).to.have.property('extra');
         expect(error.extra).to.have.property('a', 4);
-        expect(error.stack).to.match(/HttpInternalError: {"a":4}\n[ ]+at Context.<anonymous> (.*\/errorSpec.js:.*)\n.*/);
-      }
-    });
-
-    it('should throw a not found error', function () {
-      try {
-        hwError.throwHttpNotFound();
-      } catch (error) {
-        expect(error).to.be.an.instanceof(Error);
-        expect(error).to.have.property('name', 'HttpNotFoundError');
-        expect(error).to.have.property('code', 'HTTP_NOT_FOUND_ERROR');
-        expect(error).to.have.property('statusCode', 404);
-        expect(error).to.have.property('message', 'Not Found');
-        expect(error.toString()).to.equal('HttpNotFoundError: Not Found');
-        expect(error.stack).to.match(/HttpNotFoundError: Not Found\n[ ]+at Context.<anonymous> (.*\/errorSpec.js:.*)\n.*/);
+        expect(error.stack).to.match(/RootError: {"a":4}\n[ ]+at Context.<anonymous> (.*\/errorSpec.js:.*)\n.*/);
       }
     });
 
     it('should return registered error names', function () {
       var errors;
       errors = hwError.getErrors();
-      expect(errors).to.be.an('array').of.length(39);
-      expect(errors).to.eql(['RootError',
-        'HttpBadRequestError',
-        'HttpUnauthorizedError',
-        'HttpPaymentRequiredError',
-        'HttpForbiddenError',
-        'HttpNotFoundError',
-        'HttpMethodNotAllowedError',
-        'HttpNotAcceptableError',
-        'HttpProxyAuthenticationRequiredError',
-        'HttpRequestTimeoutError',
-        'HttpConflictError',
-        'HttpGoneError',
-        'HttpLengthRequiredError',
-        'HttpPreconditionFailedError',
-        'HttpRequestEntityTooLargeError',
-        'HttpRequestUriTooLargeError',
-        'HttpUnsupportedMediaTypeError',
-        'HttpRequestedRangeNotSatisfiableError',
-        'HttpExpectationFailedError',
-        'HttpImATeapotError',
-        'HttpUnprocessableEntityError',
-        'HttpLockedError',
-        'HttpFailedDependencyError',
-        'HttpUnorderCollectionError',
-        'HttpUpgradeRequiredError',
-        'HttpPreconditionRequiredError',
-        'HttpTooManyRequestsError',
-        'HttpRequestHeaderFieldsTooLargeError',
-        'HttpInternalError',
-        'HttpNotImplementedError',
-        'HttpBadGatewayError',
-        'HttpServiceUnavailableError',
-        'HttpGatewayTimeoutError',
-        'HttpVersionNotSupportedError',
-        'HttpVariantAlsoNegotiatesError',
-        'HttpInsufficientStorageError',
-        'HttpBandwidthLimitExceededError',
-        'HttpNotExtendedError',
-        'HttpNetworkAuthenticationRequiredError']);
+      expect(errors).to.be.an('array').of.length(1);
+      expect(errors).to.eql(['RootError']);
     });
 
     it('should init custom errors', function () {
@@ -246,7 +191,7 @@ describe('hw-error', function () {
           constructor: function CustomError() {
             this.code = 'CUSTOM';
           },
-          parent: 'HttpInternalError'
+          parent: 'RootError'
         }
       });
       hwError.initErrors([
@@ -254,13 +199,13 @@ describe('hw-error', function () {
           constructor: function YacError() {
             this.code = 'YAC';
           },
-          parent: 'HttpNotExtendedError'
+          parent: 'RootError'
         }, [
-          'another', {parent: 'HttpLockedError'}
+          'another', {parent: 'RootError'}
         ]
       ]);
       errors = hwError.getErrors();
-      expect(errors).to.be.an('array').of.length(42);
+      expect(errors).to.be.an('array').of.length(4);
       expect(errors).to.include('CustomError');
       expect(errors).to.include('YacError');
       expect(errors).to.include('AnotherError');
